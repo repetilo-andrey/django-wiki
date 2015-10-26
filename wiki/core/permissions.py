@@ -33,7 +33,7 @@ def can_write(article, user):
     if callable(settings.CAN_WRITE):
         return settings.CAN_WRITE(article, user)
     if user.is_anonymous():
-            return False
+        return False
     if user.has_wiki_access_read(user, article, 'write'):
         return True
     return False
