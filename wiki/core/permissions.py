@@ -22,7 +22,8 @@ def can_read(article, user):
         article_is_deleted = article.current_revision and article.current_revision.deleted
         if article_is_deleted and not article.can_delete(user):
             return False
-
+        if user.is_anonymous():
+            return False
         if user.has_wiki_access_read(user, article):
             return True
         return False
@@ -31,7 +32,8 @@ def can_read(article, user):
 def can_write(article, user):
     if callable(settings.CAN_WRITE):
         return settings.CAN_WRITE(article, user)
-    # Check access for other users...
+    if user.is_anonymous():
+            return False
     if user.has_wiki_access_read(user, article, 'write'):
         return True
     return False
