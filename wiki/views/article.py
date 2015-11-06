@@ -45,6 +45,8 @@ class ArticleView(ArticleMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         kwargs['selected_tab'] = 'view'
+        kwargs_article = ArticleMixin.get_context_data(self, **kwargs)
+        kwargs.update(kwargs_article)
         return ArticleMixin.get_context_data(self, **kwargs)
 
     def get(self, request, *args, **kwargs):
