@@ -259,10 +259,17 @@ class AttachmentDownloadView(ArticleMixin, View):
     def get(self, request, *args, **kwargs):
         if self.revision:
             if settings.USE_LOCAL_PATH:
+                from django.core.files.storage import default_storage as storage
+                from django.conf import settings as django_settings
+                f = storage.open(self.revision.file.name)
+                if 'amazonaws' in django_settings.STATIC_URL:
+                    path = django_settings.MEDIA_URL + f.name
+                else:
+                    path = self.revision.file.path
                 try:
                     return send_file(
                         request,
-                        self.revision.file.path,
+                        path,
                         self.revision.created,
                         self.attachment.original_filename)
                 except OSError:
